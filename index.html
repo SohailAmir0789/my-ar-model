@@ -4,8 +4,8 @@
     <title>Instant AR</title>
     <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/4.0.0/model-viewer.min.js"></script>
     <style>
-        body { margin: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; font-family: sans-serif; }
-        model-viewer { width: 1px; height: 1px; visibility: hidden; } /* Keep it hidden */
+        body { margin: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; font-family: sans-serif; background: #fafafa; }
+        model-viewer { width: 100%; height: 80vh; } 
     </style>
 </head>
 <body>
@@ -13,23 +13,28 @@
     <p>Please wait while the AR camera opens.</p>
 
     <model-viewer id="auto-ar" 
-        src="3DModel.glb" 
-        ios-src="your-model.usdz" 
+        src="https://SohailAmir0789.github.io/my-ar-model/3DModel.glb" 
         ar ar-modes="scene-viewer quick-look" 
-        ar-placement="floor">
+        ar-placement="floor"
+        camera-controls>
     </model-viewer>
 
     <script>
         const viewer = document.querySelector('#auto-ar');
         
-        // As soon as the model metadata is ready, force the AR mode to open
+        // Force AR to open as soon as the file is loaded
         viewer.addEventListener('load', () => {
+            console.log("Model loaded, launching AR...");
             viewer.activateAR();
         });
 
-        // Fallback: If it doesn't auto-open in 3 seconds, show a manual button
+        // Manual backup button if auto-launch is blocked by the browser
         setTimeout(() => {
-            document.body.innerHTML += '<button onclick="document.querySelector(\'#auto-ar\').activateAR()" style="padding:20px; font-size:20px;">Open Camera Manually</button>';
+            const btn = document.createElement("button");
+            btn.innerHTML = "Open Camera Manually";
+            btn.style = "padding:20px; font-size:18px; background:#4285f4; color:white; border:none; border-radius:10px; cursor:pointer;";
+            btn.onclick = () => viewer.activateAR();
+            document.body.appendChild(btn);
         }, 3000);
     </script>
 </body>
