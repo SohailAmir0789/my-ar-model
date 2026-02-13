@@ -1,30 +1,36 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <title>Instant AR</title>
     <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/4.0.0/model-viewer.min.js"></script>
+    <style>
+        body { margin: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; font-family: sans-serif; }
+        model-viewer { width: 1px; height: 1px; visibility: hidden; } /* Keep it hidden */
+    </style>
 </head>
 <body>
-    <model-viewer id="ar-router" 
+    <h3>Scanning Model...</h3>
+    <p>Please wait while the AR camera opens.</p>
+
+    <model-viewer id="auto-ar" 
         src="your-model.glb" 
         ios-src="your-model.usdz" 
-        ar ar-modes="webxr scene-viewer quick-look" 
-        style="display:none;">
+        ar ar-modes="scene-viewer quick-look" 
+        ar-placement="floor">
     </model-viewer>
 
     <script>
-        // 2. Automatically trigger AR as soon as the page loads
-        window.addEventListener('load', () => {
-            const modelViewer = document.querySelector('#ar-router');
-            
-            // This waits a tiny bit for the model to "ready up" then clicks AR
-            setTimeout(() => {
-                modelViewer.activateAR();
-            }, 500); 
+        const viewer = document.querySelector('#auto-ar');
+        
+        // As soon as the model metadata is ready, force the AR mode to open
+        viewer.addEventListener('load', () => {
+            viewer.activateAR();
         });
+
+        // Fallback: If it doesn't auto-open in 3 seconds, show a manual button
+        setTimeout(() => {
+            document.body.innerHTML += '<button onclick="document.querySelector(\'#auto-ar\').activateAR()" style="padding:20px; font-size:20px;">Open Camera Manually</button>';
+        }, 3000);
     </script>
-    
-    <p style="text-align:center; font-family:sans-serif; margin-top:50px;">
-        Opening AR Camera... <br> (If it doesn't open, tap the screen)
-    </p>
 </body>
 </html>
